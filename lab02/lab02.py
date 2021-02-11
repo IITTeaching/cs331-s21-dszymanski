@@ -33,8 +33,17 @@ ROMEO_SOLILOQUY = """
 ################################################################################
 # Implement this function
 def compute_ngrams(toks, n=2):
-    """Returns an n-gram dictionary based on the provided list of tokens."""
-    pass
+    d = dict()
+
+# if i = tok.length()-1 BREAK
+    for i in range(len(toks) - (n-1)):
+        # if not in dictionary - adds new term (and definition)
+        if (toks[i] not in d):
+                d[toks[i]] = [tuple(toks[i+1:n+i])]
+        else:
+            # if in dictionary ony adds definition
+                d[toks[i]].append(tuple(toks[i+1:n+i]))
+    return d
 
 def test1():
     test1_1()
@@ -93,7 +102,32 @@ def test1_2():
 ################################################################################
 # Implement this function
 def gen_passage(ngram_dict, length=100):
-    pass
+    sortedDictWords = sorted(ngram_dict.keys())
+    rand = random.choice(sortedDictWords)
+
+    # list of words to combined
+    text = list()
+    text.append(rand)
+
+    # case for not returning over length prop
+    while len(text) < length:
+        # chooses word line
+        textBlock = random.choice(ngram_dict[rand])
+        for word in textBlock:
+            # then for each word appends to list
+            text.append(word)
+        if textBlock[-1] in sortedDictWords:
+            # ^ finds last word of line and then replaces the random one to start new line
+            rand = textBlock[-1]
+        else:
+            # If repeats then chooses new random to start new line
+            rand = random.choice(sortedDictWords)
+            text.append(rand)
+       
+    # returns joined line
+    return " ".join(text)
+
+
 
 # 50 Points
 def test2():
